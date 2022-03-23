@@ -31,11 +31,11 @@ could be replaced with PostgreSQL or Pandas or straight python lists
 
 '''
 
-#from transactions import Transaction
+from Transaction import Transaction
 from category import Category
 import sys
 
-#transactions = Transaction('tracker.db')
+transactions = Transaction('tracker.db')
 category = Category('tracker.db')
 
 
@@ -78,6 +78,17 @@ def process_choice(choice):
         desc = input("new category description: ")
         cat = {'name':name, 'desc':desc}
         category.update(rowid,cat)
+    elif choice=='4':
+        t = transactions.select_all()
+        print_transactions(t)
+    elif choice=='5':
+        amount = input("amount: ")
+        cat = input("category: ")
+        date = input("date: ")
+        desc = input("description: ")
+        
+        cat = {'amount': amount, 'category':cat, 'date':date, 'desc':desc}
+        transactions.add(cat)
     else:
         print("choice",choice,"not yet implemented")
 
@@ -105,12 +116,12 @@ def print_transactions(items):
         print('no items to print')
         return
     print('\n')
-    print("%-10s %-10d %-10s %-10d %-30s"%(
+    print("%-10s %-10s %-10s %-20s %-20s"%(
         'item #','amount','category','date','description'))
-    print('-'*40)
+    print('-'*70)
     for item in items:
         values = tuple(item.values()) 
-        print("%-10s %-10d %-10s %-10d %-30s"%values)
+        print("%-10s %-10s %-10s %-20s %-20s"%values)
 
 def print_category(cat):
     print("%-3d %-10s %-30s"%(cat['rowid'],cat['name'],cat['desc']))

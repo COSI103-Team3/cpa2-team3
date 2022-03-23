@@ -89,6 +89,9 @@ def process_choice(choice):
         
         cat = {'amount': amount, 'category':cat, 'date':date, 'desc':desc}
         transactions.add(cat)
+    elif choice=='6':
+        i = input("item #: ")
+        transactions.delete(i)
     else:
         print("choice",choice,"not yet implemented")
 

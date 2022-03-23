@@ -74,7 +74,7 @@ class Transaction():
         '''
         con= sqlite3.connect(self.dbfile)
         cur = con.cursor()
-        cur.execute('''DELETE FROM categories
+        cur.execute('''DELETE FROM transactions
                        WHERE rowid=(?);
         ''',(rowid,))
         con.commit()

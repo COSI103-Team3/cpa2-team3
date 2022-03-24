@@ -84,14 +84,32 @@ def process_choice(choice):
     elif choice=='5':
         amount = input("amount: ")
         cat = input("category: ")
-        date = input("date: ")
+        date = input("enter date (YYYY-MM-DD): ")
         desc = input("description: ")
-        
+
         cat = {'amount': amount, 'category':cat, 'date':date, 'desc':desc}
         transactions.add(cat)
     elif choice=='6':
         i = input("item #: ")
         transactions.delete(i)
+    elif choice=='7':
+        d = input("date: ")
+        t = transactions.select_date(d)
+        print_transactions(t)
+    elif choice=='8':
+        m = input("month: ")
+        t = transactions.select_month(m)
+        print_transactions(t)
+    elif choice=='9':
+        y = input("year: ")
+        t = transactions.select_year(y)
+        print_transactions(t)
+    elif choice=='10':
+        c = input("category: ")
+        t = transactions.select_cat(c)
+        print_transactions(t)
+    elif choice=='11':
+        print(menu)
     else:
         print("choice",choice,"not yet implemented")
 
@@ -119,12 +137,12 @@ def print_transactions(items):
         print('no items to print')
         return
     print('\n')
-    print("%-10s %-10s %-10s %-20s %-20s"%(
+    print("%-10s %-10s %-20s %-20s %-10s"%(
         'item #','amount','category','date','description'))
-    print('-'*70)
+    print('-'*80)
     for item in items:
         values = tuple(item.values()) 
-        print("%-10s %-10s %-10s %-20s %-20s"%values)
+        print("%-10s %-10s %-20s %-20s %-10s"%values)
 
 def print_category(cat):
     print("%-3d %-10s %-30s"%(cat['rowid'],cat['name'],cat['desc']))

@@ -15,7 +15,7 @@ class Transaction():
         con= sqlite3.connect(dbfile)
         cur = con.cursor()
         cur.execute('''CREATE TABLE IF NOT EXISTS transactions
-                    (amount integer, category text, date integer, desc text)''')
+                    (amount integer, category text, date date, desc text)''')
         con.commit()
         con.close()
         self.dbfile = dbfile
@@ -34,12 +34,11 @@ class Transaction():
         ''' return a category with a specified rowid '''
         con= sqlite3.connect(self.dbfile)
         cur = con.cursor()
-        cur.execute("SELECT rowid,* from categories where rowid=(?)",(rowid,) )
+        cur.execute("SELECT rowid,* from transactions where rowid=(?)",(rowid,) )
         tuples = cur.fetchall()
         con.commit()
         con.close()
         return to_cat_dict(tuples[0])
-
 
     def add(self,item):
         ''' add a category to the categories table.

@@ -34,7 +34,7 @@ def med_db(small_db):
     # add 10 transactions
     for i in range(10):
         s = str(i)
-        d = '200'+s+'-0'+s+'-0'+s
+        d = '000'+s+'-'+s+'0-'+s+'0'
         tran = {'amount': i, 'category': s, 'date': d, 'desc':s}
         rowid = small_db.add(tran)
         rowids.append(rowid)
@@ -48,7 +48,7 @@ def med_db(small_db):
 @pytest.mark.simple
 def test_to_cat_dict():
     ''' teting the to_cat_dict function '''
-    a = to_cat_dict_list(((20,15,'fruit' '2000-08-25', 'apples'),(25,16,'fruits' '2000-08-24', 'appl')))
+    a = to_cat_dict_list(((20,15,'fruit','2000-08-25', 'apples'),(25,16,'fruits','2000-08-24', 'appl')))
     assert a[0]['item_num']==20
     assert a[1]['item_num']==25
     assert a[1]['amount']==16
@@ -59,7 +59,7 @@ def test_to_cat_dict():
 
 @pytest.mark.add
 def test_add(med_db):
-    ''' add a category to db, the select it, then delete it'''
+    ''' add a transaction to db, the select it, then delete it'''
 
     cat0 = {'amount': 30, 'category': 'beans', 'date': '2000-08-09', 'desc':'beaaaans'}
     cats0 = med_db.select_all()
@@ -76,7 +76,7 @@ def test_add(med_db):
 
 @pytest.mark.delete
 def test_delete(med_db):
-    ''' add a category to db, delete it, and see that the size changes'''
+    ''' add a transaction to db, delete it, and see that the size changes'''
     # first we get the initial table
     cats0 = med_db.select_all()
 
@@ -92,24 +92,46 @@ def test_delete(med_db):
     assert len(cats0)==len(cats2)
     assert len(cats2) == len(cats1)-1
 
-@pytest.mark.update
-def test_update(med_db):
-    ''' add a category to db, updates it, and see that it changes'''
+@pytest.mark.select_by_date
+def test_select_by_date(med_db):
+    ''' add a transaction to db, updates it, and see that it changes'''
 
     # then we add this transaction to the table and get the new list of rows
-    cat0 = {'name':'testing_add',
-            'desc':'see if it works',
-            }
-    rowid = med_db.add(cat0)
+    cat0 = {'amount': 30, 'category': 'beans', 'date': '1999-07-09', 'desc':'beeeeaaaans'}
+    med_db.add(cat0)
+    cat1 = {'amount': 25, 'category': 'beans', 'date': '2000-08-09', 'desc':'beanss'}
+    med_db.add(cat1)
 
     # now we upate the transactions
-    cat1 = {'name':'new cat','desc':'new desc'}
-    med_db.update(rowid,cat1)
+    cat2 = {'amount': 35, 'category': 'bees', 'date': '2006-06-29', 'desc':'beeeeeezzzzzz'}
+    med_db.add(cat2)
+    cat3 = {'amount': 45, 'category': 'bees', 'date': '2007-04-30', 'desc':'buz'}
+    med_db.add(cat3)
 
-    # now we retrieve the transaction and check that it has changed
-    cat2 = med_db.select_one(rowid)
-    assert cat2['name']==cat1['name']
-    assert cat2['desc']==cat1['desc']
+
+    # now we retrieve the transaction by the full date
+    cat4 = med_db.select_date('2000-08-09')
+    assert len(cat4) == 1
+    assert cat1['amount']==cat4[0]['amount']
+    assert cat1['category']==cat4[0]['category']
+    assert cat1['date']==cat4[0]['date']
+    assert cat1['desc']==cat4[0]['desc']
+
+    # now we retrieve the transaction by the month
+    cat4 = med_db.select_month('07')
+    assert len(cat4) == 1
+    assert cat0['amount']==cat4[0]['amount']
+    assert cat0['category']==cat4[0]['category']
+    assert cat0['date']==cat4[0]['date']
+    assert cat0['desc']==cat4[0]['desc']
+
+    # now we retrieve the transaction by the Year
+    cat4 = med_db.select_year('2007')
+    assert len(cat4) == 1
+    assert cat3['amount']==cat4[0]['amount']
+    assert cat3['category']==cat4[0]['category']
+    assert cat3['date']==cat4[0]['date']
+    assert cat3['desc']==cat4[0]['desc']
 
 # Eric
 '''Testing select_cat method '''

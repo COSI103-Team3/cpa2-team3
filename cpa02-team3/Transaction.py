@@ -54,19 +54,6 @@ class Transaction():
         con.close()
         return last_rowid[0]
 
-    def update(self,rowid,item):
-        ''' add a category to the categories table.
-            this returns the rowid of the inserted element
-        '''
-        con= sqlite3.connect(self.dbfile)
-        cur = con.cursor()
-        cur.execute('''UPDATE categories
-                        SET name=(?), desc=(?)
-                        WHERE rowid=(?);
-        ''',(item['name'],item['desc'],rowid))
-        con.commit()
-        con.close()
-
     def delete(self,rowid):
         ''' add a category to the categories table.
             this returns the rowid of the inserted element

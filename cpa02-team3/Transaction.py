@@ -109,7 +109,8 @@ class Transaction():
         con.close()
         return to_cat_dict_list(tuples)
     
-    #Eric
+    # Eric
+    # Number 10: Summarize transactions by category
     def select_cat(self,c):
         ''' return a category with a specified category '''
         con= sqlite3.connect(self.dbfile)

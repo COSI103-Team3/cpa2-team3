@@ -88,3 +88,13 @@ class Transaction():
         con.commit()
         con.close()
         return to_cat_dict_list(tuples)
+
+#Ava
+    def select_month(self,month):
+        con= sqlite3.connect(self.dbfile)
+        cur = con.cursor()
+        cur.execute("SELECT rowid,* from transactions where strftime('%m', date)=(?)",(month,))
+        tuples = cur.fetchall()
+        con.commit()
+        con.close()
+        return to_cat_dict_list(tuples)

@@ -20,6 +20,7 @@ class Transaction():
         con.close()
         self.dbfile = dbfile
 
+    #Shai
     def select_all(self):
         ''' return all of the categories as a list of dicts.'''
         con= sqlite3.connect(self.dbfile)
@@ -40,6 +41,7 @@ class Transaction():
         con.close()
         return to_cat_dict(tuples[0])
 
+    #Shai
     def add(self,item):
         ''' add a category to the categories table.
             this returns the rowid of the inserted element

@@ -45,6 +45,7 @@ def med_db(small_db):
     for j in range(10):
         small_db.delete(rowids[j])
 
+<<<<<<< HEAD
 @pytest.mark.simple
 def test_to_cat_dict():
     ''' teting the to_cat_dict function '''
@@ -111,3 +112,22 @@ def test_update(med_db):
     cat2 = med_db.select_one(rowid)
     assert cat2['name']==cat1['name']
     assert cat2['desc']==cat1['desc']
+
+# Eric
+'''Testing select_cat method '''
+@pytest.mark.select_cat
+def test_select_cat(med_db):
+    # Adding test category
+    cat_test = {'amount': '',
+                'category': 'Testing select_cat',
+                'date': '',
+                'desc': ''}
+    
+    # Category should be empty due to testing category
+    rowid = Transaction.add(med_db,cat_test)
+
+    # reading back all items from the category
+    cat_return = med_db.select_cat(cat_test['category'])
+    
+    # Seeing if the correct category was added to
+    assert len(cat_return) - 1 == 0

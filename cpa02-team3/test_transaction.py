@@ -31,7 +31,7 @@ def small_db(empty_db):
 def med_db(small_db):
     ''' create a database with 10 more elements than small_db'''
     rowids=[]
-    # add 10 categories
+    # add 10 transactions
     for i in range(10):
         s = str(i)
         d = '200'+s+'-0'+s+'-0'+s
@@ -41,7 +41,73 @@ def med_db(small_db):
 
     yield small_db
 
-    # remove those 10 categories
+    # remove those 10 transactions
     for j in range(10):
         small_db.delete(rowids[j])
 
+@pytest.mark.simple
+def test_to_cat_dict():
+    ''' teting the to_cat_dict function '''
+    a = to_cat_dict_list(((20,15,'fruit' '2000-08-25', 'apples'),(25,16,'fruits' '2000-08-24', 'appl')))
+    assert a[0]['item_num']==20
+    assert a[1]['item_num']==25
+    assert a[1]['amount']==16
+    assert a[0]['date']=='2000-08-25'
+    assert a[0]['desc']=='apples'
+    assert len(a[0].keys())==5
+
+
+@pytest.mark.add
+def test_add(med_db):
+    ''' add a category to db, the select it, then delete it'''
+
+    cat0 = {'name':'testing_add',
+            'desc':'see if it works',
+            }
+    cats0 = med_db.select_all()
+    rowid = med_db.add(cat0)
+    cats1 = med_db.select_all()
+    assert len(cats1) == len(cats0) + 1
+    cat1 = med_db.select_one(rowid)
+    assert cat1['name']==cat0['name']
+    assert cat1['desc']==cat0['desc']
+
+
+@pytest.mark.delete
+def test_delete(med_db):
+    ''' add a category to db, delete it, and see that the size changes'''
+    # first we get the initial table
+    cats0 = med_db.select_all()
+
+    # then we add this transaction to the table and get the new list of rows
+    cat0 = {'name':'testing_add',
+            'desc':'see if it works',
+            }
+    rowid = med_db.add(cat0)
+    cats1 = med_db.select_all()
+
+    # now we delete the transaction and again get the new list of rows
+    med_db.delete(rowid)
+    cats2 = med_db.select_all()
+
+    assert len(cats0)==len(cats2)
+    assert len(cats2) == len(cats1)-1
+
+@pytest.mark.update
+def test_update(med_db):
+    ''' add a category to db, updates it, and see that it changes'''
+
+    # then we add this transaction to the table and get the new list of rows
+    cat0 = {'name':'testing_add',
+            'desc':'see if it works',
+            }
+    rowid = med_db.add(cat0)
+
+    # now we upate the category
+    cat1 = {'name':'new cat','desc':'new desc'}
+    med_db.update(rowid,cat1)
+
+    # now we retrieve the transaction and check that it has changed
+    cat2 = med_db.select_one(rowid)
+    assert cat2['name']==cat1['name']
+    assert cat2['desc']==cat1['desc']

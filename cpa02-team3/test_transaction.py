@@ -45,7 +45,6 @@ def med_db(small_db):
     for j in range(10):
         small_db.delete(rowids[j])
 
-<<<<<<< HEAD
 @pytest.mark.simple
 def test_to_cat_dict():
     ''' teting the to_cat_dict function '''
@@ -62,16 +61,17 @@ def test_to_cat_dict():
 def test_add(med_db):
     ''' add a category to db, the select it, then delete it'''
 
-    cat0 = {'name':'testing_add',
-            'desc':'see if it works',
-            }
+    cat0 = {'amount': 30, 'category': 'beans', 'date': '2000-08-09', 'desc':'beaaaans'}
     cats0 = med_db.select_all()
     rowid = med_db.add(cat0)
     cats1 = med_db.select_all()
     assert len(cats1) == len(cats0) + 1
     cat1 = med_db.select_one(rowid)
-    assert cat1['name']==cat0['name']
+    assert cat1['amount']==cat0['amount']
+    assert cat1['category']==cat0['category']
+    assert cat1['date']==cat0['date']
     assert cat1['desc']==cat0['desc']
+
 
 
 @pytest.mark.delete
@@ -81,9 +81,7 @@ def test_delete(med_db):
     cats0 = med_db.select_all()
 
     # then we add this transaction to the table and get the new list of rows
-    cat0 = {'name':'testing_add',
-            'desc':'see if it works',
-            }
+    cat0 = {'amount': 30, 'category': 'beans', 'date': '2000-08-09', 'desc':'beaaaans'}
     rowid = med_db.add(cat0)
     cats1 = med_db.select_all()
 
@@ -104,7 +102,7 @@ def test_update(med_db):
             }
     rowid = med_db.add(cat0)
 
-    # now we upate the category
+    # now we upate the transactions
     cat1 = {'name':'new cat','desc':'new desc'}
     med_db.update(rowid,cat1)
 
@@ -123,7 +121,7 @@ def test_select_cat(med_db):
                 'date': '',
                 'desc': ''}
     
-    # Category should be empty due to testing category
+    # transactions should be empty due to testing category
     rowid = Transaction.add(med_db,cat_test)
 
     # reading back all items from the category
